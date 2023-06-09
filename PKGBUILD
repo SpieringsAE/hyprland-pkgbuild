@@ -80,12 +80,14 @@ build() {
 
 package() {
 	cd "$_archive"
-	find src -name '*.h*' -print0 | cpio --quiet -0dump "$pkgdir/usr/include/hyprland"
-	pushd subprojects/wlroots/include
-	find . -name '*.h*' -print0 | cpio --quiet -0dump "$pkgdir/usr/include/hyprland/wlroots"
+	pushd src
+	find . -name '*.hpp' -exec install -Dm0644 {} "$pkgdir/usr/include/hyprland/{}" \;
 	popd
-	pushd subprojects/wlroots/build/include 
-	find . -name '*.h*' -print0 | cpio --quiet -0dump "$pkgdir/usr/include/hyprland/wlroots"
+	pushd subprojects/wlroots/include
+	find . -name '*.h' -exec install -Dm0644 {} "$pkgdir/usr/include/hyprland/wlroots/{}" \;
+	popd
+	pushd subprojects/wlroots/build/include
+	find . -name '*.h' -exec install -Dm0644 {} "$pkgdir/usr/include/hyprland/wlroots/{}" \;
 	popd
 	mkdir -p "$pkgdir/usr/include/hyprland/protocols"
 	cp protocols/*-protocol.h "$pkgdir/usr/include/hyprland/protocols"
