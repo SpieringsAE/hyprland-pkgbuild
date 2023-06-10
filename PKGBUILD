@@ -3,7 +3,7 @@
 
 pkgname=hyprland
 pkgver=0.26.0
-pkgrel=2
+pkgrel=3
 pkgdesc='a highly customizable dynamic tiling Wayland compositor'
 arch=(x86_64 aarch64)
 url="https://github.com/hyprwm/${pkgname^}"
@@ -80,9 +80,7 @@ build() {
 
 package() {
 	cd "$_archive"
-	pushd src
-	find . -name '*.hpp' -exec install -Dm0644 {} "$pkgdir/usr/include/hyprland/{}" \;
-	popd
+	find src -name '*.hpp' -exec install -Dm0644 {} "$pkgdir/usr/include/hyprland/{}" \;
 	pushd subprojects/wlroots/include
 	find . -name '*.h' -exec install -Dm0644 {} "$pkgdir/usr/include/hyprland/wlroots/{}" \;
 	popd
