@@ -2,7 +2,7 @@
 # Contributor: ThatOneCalculator <kainoa@t1c.dev>
 
 pkgname=hyprland
-pkgver=0.27.2
+pkgver=0.28.0
 pkgrel=1
 pkgdesc='a highly customizable dynamic tiling Wayland compositor'
 arch=(x86_64 aarch64)
@@ -51,7 +51,7 @@ makedepends=(cmake
              xorgproto)
 _archive="${pkgname^}-$pkgver"
 source=("$_archive.tar.gz::$url/releases/download/v$pkgver/source-v$pkgver.tar.gz")
-sha256sums=('1cb1b345fd98e80cb04ba60c7bb42ead6b6ad79898f84b468f3ba87459d99f1f')
+sha256sums=('baf355cb4e301b27de59fa5fc503b7338eed1bc921fcf76b73629504a00ffefd')
 
 prepare() {
 	ln -sf hyprland-source "$_archive"
