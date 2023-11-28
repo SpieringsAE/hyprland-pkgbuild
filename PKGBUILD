@@ -1,8 +1,10 @@
 # Maintainer: Caleb Maclennan <caleb@alerque.com>
 # Contributor: ThatOneCalculator <kainoa@t1c.dev>
+# Contributor: Brenno Lemos <brenno@syndel.is>
+# Contributor: Gabriel Fox <inbox@gabrielfox.dev>
 
 pkgname=hyprland
-pkgver=0.30.0
+pkgver=0.32.3
 pkgrel=1
 pkgdesc='a highly customizable dynamic tiling Wayland compositor'
 arch=(x86_64 aarch64)
@@ -25,7 +27,6 @@ depends=(cairo
          libxrender
          opengl-driver
          pango
-         pixman
          pixman
          polkit
          seatd
@@ -51,31 +52,17 @@ makedepends=(cmake
              xorgproto)
 _archive="${pkgname^}-$pkgver"
 source=("$_archive.tar.gz::$url/releases/download/v$pkgver/source-v$pkgver.tar.gz")
-sha256sums=('68a79b2c1ae1a56c046e6ecf07f0b3a8135461d387f6ad0d8f0623a7f300ca80')
+sha256sums=('285e8ebbd003978a2124e984db7677d044c21ca3cb72948eb71742cd8396df35')
 
 prepare() {
 	ln -sf hyprland-source "$_archive"
 	cd "$_archive"
-	make fixwlr
 	sed -i -e '/^release:/{n;s/-D/-DCMAKE_SKIP_RPATH=ON -D/}' Makefile
 }
 
 build() {
 	cd "$_archive"
-	pushd subprojects/wlroots
-	meson build/ --prefix="$srcdir/tmpwlr" --buildtype=release
-	ninja -C build/
-	mkdir -p "$srcdir/tmpwlr"
-	ninja -C build/ install
-	popd
-	pushd subprojects/udis86
-	cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -H./ -B./build -G Ninja
-	cmake --build ./build --config Release --target all
-	popd
-	make protocols
 	make release
-	pushd hyprctl
-	make all
 }
 
 package() {
@@ -94,10 +81,10 @@ package() {
 	popd
 	install -Dm0644 -t "$pkgdir/usr/share/pkgconfig" build/hyprland.pc
 	install -Dm0755 -t "$pkgdir/usr/bin" build/Hyprland
-	install -Dm0755 -t "$pkgdir/usr/bin" hyprctl/hyprctl
+	install -Dm0755 -t "$pkgdir/usr/bin" build/hyprctl/hyprctl
 	install -Dm0644 -t "$pkgdir/usr/share/$pkgname" assets/*.png
 	install -Dm0644 -t "$pkgdir/usr/share/wayland-sessions" "example/$pkgname.desktop"
 	install -Dm0644 -t "$pkgdir/usr/share/$pkgname" "example/$pkgname.conf"
 	install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" LICENSE
-	install -Dm0755 -t "$pkgdir/usr/lib" "$srcdir/tmpwlr/lib/libwlroots.so.12032"
+	install -Dm0755 -t "$pkgdir/usr/lib" "subprojects/wlroots/build/libwlroots.so.12032"
 }
