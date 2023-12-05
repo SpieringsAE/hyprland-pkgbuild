@@ -4,7 +4,7 @@
 # Contributor: Gabriel Fox <inbox@gabrielfox.dev>
 
 pkgname=hyprland
-pkgver=0.32.3
+pkgver=0.33.0
 pkgrel=1
 pkgdesc='a highly customizable dynamic tiling Wayland compositor'
 arch=(x86_64 aarch64)
@@ -52,7 +52,7 @@ makedepends=(cmake
              xorgproto)
 _archive="${pkgname^}-$pkgver"
 source=("$_archive.tar.gz::$url/releases/download/v$pkgver/source-v$pkgver.tar.gz")
-sha256sums=('285e8ebbd003978a2124e984db7677d044c21ca3cb72948eb71742cd8396df35')
+sha256sums=('449ffaafbf6b4442fc41947c464e38a60fb190b024a6c54ee75df850b5f5f9fe')
 
 prepare() {
 	ln -sf hyprland-source "$_archive"
@@ -80,11 +80,11 @@ package() {
 	cmake -DCMAKE_INSTALL_PREFIX=/usr ..
 	popd
 	install -Dm0644 -t "$pkgdir/usr/share/pkgconfig" build/hyprland.pc
-	install -Dm0755 -t "$pkgdir/usr/bin" build/Hyprland
-	install -Dm0755 -t "$pkgdir/usr/bin" build/hyprctl/hyprctl
-	install -Dm0644 -t "$pkgdir/usr/share/$pkgname" assets/*.png
-	install -Dm0644 -t "$pkgdir/usr/share/wayland-sessions" "example/$pkgname.desktop"
-	install -Dm0644 -t "$pkgdir/usr/share/$pkgname" "example/$pkgname.conf"
+	install -Dm0755 -t "$pkgdir/usr/bin/" build/Hyprland build/hyprctl/hyprctl
+	install -Dm0644 -t "$pkgdir/usr/share/$pkgname/" assets/*.png
+	install -Dm0644 -t "$pkgdir/usr/share/wayland-sessions/" "example/$pkgname.desktop"
+	install -Dm0644 -t "$pkgdir/usr/share/$pkgname/" "example/$pkgname.conf"
 	install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" LICENSE
-	install -Dm0755 -t "$pkgdir/usr/lib" "subprojects/wlroots/build/libwlroots.so.12032"
+        find subprojects/wlroots/build -name 'libwlroots.so.*' -type f -execdir \
+                install -Dm0755 -t "$pkgdir/usr/lib/" {} \;
 }
