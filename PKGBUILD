@@ -80,6 +80,7 @@ package() {
 	cmake -DCMAKE_INSTALL_PREFIX=/usr ..
 	popd
 	install -Dm0644 -t "$pkgdir/usr/share/pkgconfig" build/hyprland.pc
+	install -Dm0644 -t "$pkgdir/usr/share/man/man1" docs/{Hyprland,hyprctl}.1
 	install -Dm0755 -t "$pkgdir/usr/bin/" build/Hyprland build/hyprctl/hyprctl
 	install -Dm0644 -t "$pkgdir/usr/share/$pkgname/" assets/*.png
 	install -Dm0644 -t "$pkgdir/usr/share/wayland-sessions/" "example/$pkgname.desktop"
