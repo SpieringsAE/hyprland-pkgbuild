@@ -1,7 +1,7 @@
 pkgbase = hyprland
 	pkgdesc = a highly customizable dynamic tiling Wayland compositor
-	pkgver = 0.33.1
-	pkgrel = 2
+	pkgver = 0.34.0
+	pkgrel = 1
 	url = https://github.com/hyprwm/Hyprland
 	arch = x86_64
 	arch = aarch64
@@ -33,6 +33,7 @@ pkgbase = hyprland
 	depends = polkit
 	depends = seatd
 	depends = systemd-libs
+	depends = tomlplusplus
 	depends = vulkan-icd-loader
 	depends = vulkan-validation-layers
 	depends = wayland
@@ -46,7 +47,7 @@ pkgbase = hyprland
 	depends = xorg-xinput
 	depends = xorg-xwayland
 	depends = libdisplay-info.so
-	source = Hyprland-0.33.1.tar.gz::https://github.com/hyprwm/Hyprland/releases/download/v0.33.1/source-v0.33.1.tar.gz
-	sha256sums = fe2b39ca90a4dde04159d69ea49c71315449efe5630cf2ff8bb75d4dd4589153
+	source = Hyprland-0.34.0.tar.gz::https://github.com/hyprwm/Hyprland/releases/download/v0.34.0/source-v0.34.0.tar.gz
+	sha256sums = 234500dc726ec6cd190d95d45cf6d04766064172e75c1351ee7c49ec3405497e
 
 pkgname = hyprland
