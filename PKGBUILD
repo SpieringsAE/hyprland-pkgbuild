@@ -4,47 +4,49 @@
 # Contributor: Gabriel Fox <inbox@gabrielfox.dev>
 
 pkgname=hyprland
-pkgver=0.35.0
-pkgrel=2
+pkgver=0.36.0
+pkgrel=1
 pkgdesc='a highly customizable dynamic tiling Wayland compositor'
 arch=(x86_64 aarch64)
 url="https://github.com/hyprwm/${pkgname^}"
-license=(BSD)
-depends=(cairo
-         gcc-libs
-         glibc
+license=(BSD-3-Clause)
+depends=(cairo # libcairo.so
+         gcc-libs # libgcc_s.so libstdc++.so
+         glibc # libc.so libm.so
+         glib2 libgobject-2.0.so
          glslang
-         libdisplay-info
-         libdrm
-         libglvnd
-         libinput
-         libliftoff
+         hyprlang libhyprlang.so
+         libdisplay-info libdisplay-info.so
+         libdrm # libdrm.so
+         libglvnd libEGL.so libGLESv2.so libOpenGL.so
+         libinput # libinput.so
+         libliftoff libliftoff.so
          libx11
-         libxcb
-         libxcomposite
+         libxcb # libxcb-dri3.so libxcb-present.so libxcb-render.so libxcb-res.so libxcb-shm.so libxcb.so libxcb-xfixes.so libxcb-xinput.so
+         libxcomposite # libxcb-composite.so
          libxfixes
-         libxkbcommon
+         libxkbcommon libxkbcommon.so
          libxrender
+         mesa # libgbm.so
          opengl-driver
-         pango
-         pixman
+         pango libpango-1.0.so libpangocairo-1.0.so
+         pixman libpixman-1.so
          polkit
-         seatd
-         systemd-libs
-         tomlplusplus
+         seatd libseat.so
+         systemd-libs libsystemd.so
+         tomlplusplus libtomlplusplus.so libudev.so
          vulkan-icd-loader
          vulkan-validation-layers
-         wayland
+         wayland libwayland-client.so libwayland-server.so
          wayland-protocols
          xcb-proto
          xcb-util
-         xcb-util-errors
+         xcb-util-errors # libxcb-errors.so
          xcb-util-keysyms
-         xcb-util-renderutil
-         xcb-util-wm
+         xcb-util-renderutil # libxcb-render-util.so 
+         xcb-util-wm # libxcb-ewmh.so  libxcb-icccm.so 
          xorg-xinput
          xorg-xwayland)
-depends+=(libdisplay-info.so)
 makedepends=(cmake
              gdb
              meson
@@ -56,7 +58,7 @@ optdepends=('cmake: to build and install plugins using hyprpm'
             'meson: to build and install plugins using hyprpm')
 _archive="${pkgname^}-$pkgver"
 source=("$_archive.tar.gz::$url/releases/download/v$pkgver/source-v$pkgver.tar.gz")
-sha256sums=('de53d764606131c8aacc209f8a3ad6e619fdcddd16a7cdf4d8ca343816bb8c1b')
+sha256sums=('8e44c379794663accf928458b5e363ed248d56fc5f267e6b3759146fdf1229bb')
 
 prepare() {
 	ln -sf hyprland-source "$_archive"
