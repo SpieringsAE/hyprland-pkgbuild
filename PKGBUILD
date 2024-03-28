@@ -5,7 +5,7 @@
 
 pkgname=hyprland
 pkgver=0.37.1
-pkgrel=1
+pkgrel=2
 pkgdesc='a highly customizable dynamic tiling Wayland compositor'
 arch=(x86_64 aarch64)
 url="https://github.com/hyprwm/${pkgname^}"
@@ -32,7 +32,6 @@ depends=(cairo # libcairo.so
          opengl-driver
          pango libpango-1.0.so libpangocairo-1.0.so
          pixman libpixman-1.so
-         polkit
          seatd libseat.so
          systemd-libs libsystemd.so
          tomlplusplus libtomlplusplus.so libudev.so

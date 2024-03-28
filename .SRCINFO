@@ -1,7 +1,7 @@
 pkgbase = hyprland
 	pkgdesc = a highly customizable dynamic tiling Wayland compositor
 	pkgver = 0.37.1
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/hyprwm/Hyprland
 	arch = x86_64
 	arch = aarch64
@@ -46,7 +46,6 @@ pkgbase = hyprland
 	depends = libpangocairo-1.0.so
 	depends = pixman
 	depends = libpixman-1.so
-	depends = polkit
 	depends = seatd
 	depends = libseat.so
 	depends = systemd-libs
