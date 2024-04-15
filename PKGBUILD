@@ -4,7 +4,7 @@
 # Contributor: Gabriel Fox <inbox@gabrielfox.dev>
 
 pkgname=hyprland
-pkgver=0.38.1
+pkgver=0.39.0
 pkgrel=1
 pkgdesc='a highly customizable dynamic tiling Wayland compositor'
 arch=(x86_64 aarch64)
@@ -42,6 +42,7 @@ depends=(cairo # libcairo.so
          xcb-proto
          xcb-util
          xcb-util-errors # libxcb-errors.so
+         xcb-util-image
          xcb-util-keysyms
          xcb-util-renderutil # libxcb-render-util.so 
          xcb-util-wm # libxcb-ewmh.so  libxcb-icccm.so 
@@ -58,7 +59,7 @@ optdepends=('cmake: to build and install plugins using hyprpm'
             'meson: to build and install plugins using hyprpm')
 _archive="${pkgname^}-$pkgver"
 source=("$_archive.tar.gz::$url/releases/download/v$pkgver/source-v$pkgver.tar.gz")
-sha256sums=('1a86365cc006fca4bc96c6c41347d0bde048b6463c516e09b9c54cff58fb73ab')
+sha256sums=('2f4fc15bf18dc8148aee8cf110d3720adb07f5fe33c5eaafad11e4b21d8e068c')
 
 prepare() {
 	ln -sf hyprland-source "$_archive"
@@ -74,10 +75,10 @@ build() {
 package() {
 	cd "$_archive"
 	find src \( -name '*.h' -o -name '*.hpp' \) -exec install -Dm0644 {} "$pkgdir/usr/include/hyprland/{}" \;
-	pushd subprojects/wlroots/include
+	pushd subprojects/wlroots-hyprland/include
 	find . -name '*.h' -exec install -Dm0644 {} "$pkgdir/usr/include/hyprland/wlroots/{}" \;
 	popd
-	pushd subprojects/wlroots/build/include
+	pushd subprojects/wlroots-hyprland/build/include
 	find . -name '*.h' -exec install -Dm0644 {} "$pkgdir/usr/include/hyprland/wlroots/{}" \;
 	popd
 	mkdir -p "$pkgdir/usr/include/hyprland/protocols"
@@ -92,6 +93,6 @@ package() {
 	install -Dm0644 -t "$pkgdir/usr/share/wayland-sessions/" "example/$pkgname.desktop"
 	install -Dm0644 -t "$pkgdir/usr/share/$pkgname/" "example/$pkgname.conf"
 	install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" LICENSE
-        find subprojects/wlroots/build -name 'libwlroots.so.*' -type f -execdir \
+        find subprojects/wlroots-hyprland/build -name 'libwlroots.so.*' -type f -execdir \
                 install -Dm0755 -t "$pkgdir/usr/lib/" {} \;
 }
