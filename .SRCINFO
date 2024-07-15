@@ -1,7 +1,7 @@
 pkgbase = hyprland
 	pkgdesc = a highly customizable dynamic tiling Wayland compositor
 	pkgver = 0.41.2
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/hyprwm/Hyprland
 	arch = x86_64
 	arch = aarch64
@@ -24,6 +24,7 @@ pkgbase = hyprland
 	depends = hyprlang
 	depends = libhyprlang.so
 	depends = hyprutils
+	depends = libhyprutils.so
 	depends = libdisplay-info
 	depends = libdisplay-info.so
 	depends = libdrm
