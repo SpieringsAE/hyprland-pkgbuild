@@ -73,25 +73,16 @@ prepare() {
 
 build() {
 	cd "$_archive"
-	make release
+	make release PREFIX=/usr
 }
 
 package() {
 	cd "$_archive"
-	find src \( -name '*.h' -o -name '*.hpp' \) -exec install -Dm0644 {} "$pkgdir/usr/include/hyprland/{}" \;
-	pushd build
-	cmake -DCMAKE_INSTALL_PREFIX=/usr ..
-	popd
-	install -Dm0644 -t "$pkgdir/usr/share/pkgconfig" build/hyprland.pc
-	install -Dm0644 -t "$pkgdir/usr/share/man/man1" docs/{Hyprland,hyprctl}.1
-	for cmd in hyprctl hyprpm; do
-		install -Dm0644 "$cmd/$cmd.bash" "$pkgdir/usr/share/bash-completion/completions/$cmd"
-		install -Dm0644 "$cmd/$cmd.zsh" "$pkgdir/usr/share/zsh/site-functions/_$cmd"
-		install -Dm0644 -t "$pkgdir/usr/share/fish/vendor_completions.d/" "$cmd/$cmd.fish"
-	done
-	install -Dm0755 -t "$pkgdir/usr/bin/" build/Hyprland build/hyprctl/hyprctl build/hyprpm/hyprpm
-	install -Dm0644 -t "$pkgdir/usr/share/$pkgname/" assets/*.png
-	install -Dm0644 -t "$pkgdir/usr/share/wayland-sessions/" "example/$pkgname.desktop"
-	install -Dm0644 -t "$pkgdir/usr/share/$pkgname/" "example/$pkgname.conf"
+	make DESTDIR="$pkgdir" install
+	rm -fv "$pkgdir/usr/include/hyprland/src/version.h.in"
+	# Maybe we should keep these?
+	rm -frv "$pkgdir/usr/include/hyprland/protocols"
+	# Drop this line when hyprland-portals.conf is removed from xdg-desktop-portal-hyprland
+	rm -frv "$pkgdir/usr/share/xdg-desktop-portal"
 	install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" LICENSE
 }
