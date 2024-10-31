@@ -39,7 +39,6 @@ depends=(cairo # libcairo.so
          systemd-libs libsystemd.so
          tomlplusplus libtomlplusplus.so libudev.so
          vulkan-icd-loader
-         vulkan-validation-layers
          wayland libwayland-client.so libwayland-server.so
          wayland-protocols
          xcb-proto

@@ -60,7 +60,6 @@ pkgbase = hyprland
 	depends = libtomlplusplus.so
 	depends = libudev.so
 	depends = vulkan-icd-loader
-	depends = vulkan-validation-layers
 	depends = wayland
 	depends = libwayland-client.so
 	depends = libwayland-server.so
