@@ -51,7 +51,6 @@ depends=(cairo # libcairo.so
          xorg-xinput
          xorg-xwayland)
 makedepends=(cmake
-             gdb
              hyprwayland-scanner
              meson
              ninja
