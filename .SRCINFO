@@ -7,7 +7,6 @@ pkgbase = hyprland
 	arch = aarch64
 	license = BSD-3-Clause
 	makedepends = cmake
-	makedepends = gdb
 	makedepends = hyprwayland-scanner
 	makedepends = meson
 	makedepends = ninja
