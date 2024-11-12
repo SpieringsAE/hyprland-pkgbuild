@@ -68,6 +68,9 @@ prepare() {
 	ln -sf hyprland-source "$_archive"
 	cd "$_archive"
 	sed -i -e '/^release:/{n;s/-D/-DCMAKE_SKIP_RPATH=ON -D/}' Makefile
+
+	# Workaround for https://gitlab.archlinux.org/archlinux/packaging/packages/hyprland/-/issues/15
+	rm -fv scripts/generateVersion.sh
 }
 
 build() {
