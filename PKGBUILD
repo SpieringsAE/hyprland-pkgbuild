@@ -48,7 +48,6 @@ depends=(cairo # libcairo.so
          xcb-util-keysyms
          xcb-util-renderutil # libxcb-render-util.so 
          xcb-util-wm # libxcb-ewmh.so  libxcb-icccm.so 
-         xorg-xinput
          xorg-xwayland)
 makedepends=(cmake
              hyprwayland-scanner
