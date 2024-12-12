@@ -1,0 +1,101 @@
+diff --git a/src/config/ConfigManager.cpp b/src/config/ConfigManager.cpp
+index 769a7525..8d933b45 100644
+--- a/src/config/ConfigManager.cpp
++++ b/src/config/ConfigManager.cpp
+@@ -596,6 +596,7 @@ CConfigManager::CConfigManager() {
+ 
+     // devices
+     m_pConfig->addSpecialCategory("device", {"name"});
++    m_pConfig->addSpecialConfigValue("device", "main", Hyprlang::INT{0});
+     m_pConfig->addSpecialConfigValue("device", "sensitivity", {0.F});
+     m_pConfig->addSpecialConfigValue("device", "accel_profile", {STRVAL_EMPTY});
+     m_pConfig->addSpecialConfigValue("device", "kb_file", {STRVAL_EMPTY});
+@@ -1070,20 +1071,33 @@ Hyprlang::CConfigValue* CConfigManager::getConfigValueSafeDevice(const std::stri
+ }
+ 
+ int CConfigManager::getDeviceInt(const std::string& dev, const std::string& v, const std::string& fallback) {
+-    return std::any_cast<Hyprlang::INT>(getConfigValueSafeDevice(dev, v, fallback)->getValue());
++    const auto V = getConfigValueSafeDevice(dev, v, fallback);
++    if (!V)
++        return 0;
++    return std::any_cast<Hyprlang::INT>(V->getValue());
+ }
+ 
+ float CConfigManager::getDeviceFloat(const std::string& dev, const std::string& v, const std::string& fallback) {
+-    return std::any_cast<Hyprlang::FLOAT>(getConfigValueSafeDevice(dev, v, fallback)->getValue());
++    const auto V = getConfigValueSafeDevice(dev, v, fallback);
++    if (!V)
++        return 0;
++    return std::any_cast<Hyprlang::FLOAT>(V->getValue());
+ }
+ 
+ Vector2D CConfigManager::getDeviceVec(const std::string& dev, const std::string& v, const std::string& fallback) {
+-    auto vec = std::any_cast<Hyprlang::VEC2>(getConfigValueSafeDevice(dev, v, fallback)->getValue());
++    const auto V = getConfigValueSafeDevice(dev, v, fallback);
++    if (!V)
++        return {};
++    auto vec = std::any_cast<Hyprlang::VEC2>(V->getValue());
+     return {vec.x, vec.y};
+ }
+ 
+ std::string CConfigManager::getDeviceString(const std::string& dev, const std::string& v, const std::string& fallback) {
+-    const auto VAL = std::string{std::any_cast<Hyprlang::STRING>(getConfigValueSafeDevice(dev, v, fallback)->getValue())};
++    const auto V = getConfigValueSafeDevice(dev, v, fallback);
++    if (!V)
++        return "";
++
++    auto VAL = std::string{std::any_cast<Hyprlang::STRING>(V->getValue())};
+ 
+     if (VAL == STRVAL_EMPTY)
+         return "";
+diff --git a/src/devices/IKeyboard.hpp b/src/devices/IKeyboard.hpp
+index dce2127a..bc7e0a4b 100644
+--- a/src/devices/IKeyboard.hpp
++++ b/src/devices/IKeyboard.hpp
+@@ -103,6 +103,7 @@ class IKeyboard : public IHID {
+     int                            repeatDelay       = 0;
+     int                            numlockOn         = -1;
+     bool                           resolveBindsBySym = false;
++    bool                           forceMain         = false;
+ 
+     WP<IKeyboard>                  self;
+ 
+diff --git a/src/managers/input/InputManager.cpp b/src/managers/input/InputManager.cpp
+index c190f589..503b1ab2 100644
+--- a/src/managers/input/InputManager.cpp
++++ b/src/managers/input/InputManager.cpp
+@@ -935,7 +935,17 @@ void CInputManager::setupKeyboard(SP<IKeyboard> keeb) {
+ 
+     applyConfigToKeyboard(keeb);
+ 
+-    g_pSeatManager->setKeyboard(keeb);
++    const auto ANYISMAIN = std::ranges::any_of(m_vKeyboards, [](const auto& k) { return k->forceMain; });
++
++    if (!ANYISMAIN || keeb->forceMain)
++        g_pSeatManager->setKeyboard(keeb);
++    else {
++        for (auto& k : m_vKeyboards | std::views::reverse) {
++            if (!k->forceMain)
++                continue;
++            g_pSeatManager->setKeyboard(k);
++        }
++    }
+ 
+     keeb->updateLEDs();
+ }
+@@ -959,6 +969,7 @@ void CInputManager::applyConfigToKeyboard(SP<IKeyboard> pKeyboard) {
+ 
+     const auto NUMLOCKON         = g_pConfigManager->getDeviceInt(devname, "numlock_by_default", "input:numlock_by_default");
+     const auto RESOLVEBINDSBYSYM = g_pConfigManager->getDeviceInt(devname, "resolve_binds_by_sym", "input:resolve_binds_by_sym");
++    const auto FORCEMAIN         = g_pConfigManager->getDeviceInt(devname, "main", "");
+ 
+     const auto FILEPATH = g_pConfigManager->getDeviceString(devname, "kb_file", "input:kb_file");
+     const auto RULES    = g_pConfigManager->getDeviceString(devname, "kb_rules", "input:kb_rules");
+@@ -971,6 +982,7 @@ void CInputManager::applyConfigToKeyboard(SP<IKeyboard> pKeyboard) {
+ 
+     pKeyboard->enabled           = ENABLED;
+     pKeyboard->resolveBindsBySym = RESOLVEBINDSBYSYM;
++    pKeyboard->forceMain         = FORCEMAIN;
+ 
+     try {
+         if (NUMLOCKON == pKeyboard->numlockOn && REPEATDELAY == pKeyboard->repeatDelay && REPEATRATE == pKeyboard->repeatRate && RULES != "" &&
